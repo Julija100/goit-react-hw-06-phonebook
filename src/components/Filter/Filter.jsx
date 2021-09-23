@@ -1,20 +1,21 @@
-import style from '../Filter/Filter.module.css'
-import PropTypes from 'prop-types';
+import style from "../Filter/Filter.module.css";
+import PropTypes from "prop-types";
 
-const Filter = ({ onFilterChange }) => {
+const Filter = ({ setFilter }) => {
   return (
     <label>
       <p className={style.filterLitleTitle}>Find contacts by name:</p>
       <input
         className={style.filterInput}
         type="text"
-        onChange={onFilterChange}
+        onChange={(e) => setFilter(e.target.value)}
       />
     </label>
   );
 };
 
 Filter.propTypes = {
-  onFilterChange: PropTypes.func.isRequired,
+  setFilter: PropTypes.func.isRequired,
 };
+
 export default Filter;
