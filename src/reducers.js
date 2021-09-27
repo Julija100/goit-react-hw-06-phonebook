@@ -1,41 +1,34 @@
+import { createReducer } from "@reduxjs/toolkit";
+import { combineReducers } from "redux";
+import { removeContact, setFilter, addContact } from "./actions";
+
 const intialState = {
-  contacts: {
-    items: JSON.parse(localStorage.getItem("contacts")) || [],
-    filter: "",
+  items: JSON.parse(localStorage.getItem("contacts")) || [],
+  filter: "",
+};
+
+const contacts = createReducer(intialState, {
+  [addContact]: (state, { payload }) => {
+    const items = [...state.items, payload];
+    localStorage.setItem("contacts", JSON.stringify(items));
+
+    return {
+      ...state,
+      items,
+    };
   },
-};
 
-const reducer = (state = intialState, { type, payload }) => {
-  switch (type) {
-    case "ADD_CONTACT": {
-      const items = [...state.contacts.items, payload];
+  [removeContact]: (state, { payload }) => {
+    const items = state.items.filter(({ id }) => id !== payload.id);
+    localStorage.setItem("contacts", JSON.stringify(items));
 
-      localStorage.setItem("contacts", JSON.stringify(items));
-      return {
-        ...state,
-        contacts: {
-          ...state.contacts,
-          items,
-        },
-      };
-    }
-    case "REMOVE_CONTACT": {
-      const items = state.contacts.items.filter(({ id }) => id !== payload.id);
-      localStorage.setItem("contacts", JSON.stringify(items));
+    return {
+      ...state,
+      items,
+    };
+  },
 
-      return {
-        ...state,
-        contacts: {
-          ...state.contacts,
-          items,
-        },
-      };
-    }
-    case "SET_FILTER":
-      return { ...state, contacts: { ...state.contacts, filter: payload } };
-    default:
-      return state;
-  }
-};
+  [setFilter]: (state, { payload }) => ({ ...state, filter: payload }),
+});
 
-export default reducer;
+export default combineReducers({ contacts });
