@@ -1,6 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { combineReducers } from "redux";
-import { removeContact, setFilter, addContact } from "./actions";
+import { removeContact, setFilter, addContact } from "../actions";
 
 const intialState = {
   items: JSON.parse(localStorage.getItem("contacts")) || [],
@@ -9,6 +8,15 @@ const intialState = {
 
 const contacts = createReducer(intialState, {
   [addContact]: (state, { payload }) => {
+    if (state.items.some((item) => item.name === payload.name)) {
+      alert(`${payload.name} is already in contacts`);
+      return state;
+    }
+    if (state.items.some((item) => item.number === payload.number)) {
+      alert(`${payload.number} is already in contacts`);
+      return state;
+    }
+
     const items = [...state.items, payload];
     localStorage.setItem("contacts", JSON.stringify(items));
 
@@ -31,4 +39,4 @@ const contacts = createReducer(intialState, {
   [setFilter]: (state, { payload }) => ({ ...state, filter: payload }),
 });
 
-export default combineReducers({ contacts });
+export default contacts;
