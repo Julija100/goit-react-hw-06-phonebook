@@ -2,7 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 import { removeContact, setFilter, addContact } from "../actions";
 
 const intialState = {
-  items: JSON.parse(localStorage.getItem("contacts")) || [],
+  items: [],
   filter: "",
 };
 
@@ -18,7 +18,6 @@ const contacts = createReducer(intialState, {
     }
 
     const items = [...state.items, payload];
-    localStorage.setItem("contacts", JSON.stringify(items));
 
     return {
       ...state,
@@ -28,7 +27,6 @@ const contacts = createReducer(intialState, {
 
   [removeContact]: (state, { payload }) => {
     const items = state.items.filter(({ id }) => id !== payload.id);
-    localStorage.setItem("contacts", JSON.stringify(items));
 
     return {
       ...state,
